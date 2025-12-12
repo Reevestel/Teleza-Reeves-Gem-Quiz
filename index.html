@@ -5,25 +5,23 @@
   <title>Teleza Reeves — GEMS Quiz</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
-  :root {
-  /* ===== Teleza Reeves Brand ===== */
-  --bg: #0B1020;
-  --bg-card: #121A33;
-  --fg: #F6F7FB;
-  --muted: #A7B0C0;
+    :root {
+      /* Brand palette (NOT gold/black) */
+      --bg: #07060a;               /* deep near-black */
+      --bg-card: #121017;          /* deep charcoal */
+      --fg: #ffffff;
+      --muted: #c9c4d4;
 
-  --primary: #7C5CFF;      /* violet */
-  --primary-soft: #B7A7FF; /* soft violet */
-  --accent: #00D4FF;       /* aqua glow */
-  --border-soft: rgba(246,247,251,0.18);
+      --brand: #a78bfa;            /* lavender */
+      --brand-soft: #f9a8d4;       /* blush */
+      --brand-ivory: #f5f2ff;      /* soft ivory */
+      --border-soft: rgba(255,255,255,0.18);
 
-  /* Gem colors (keep these) */
-  --sapphire: #2bb3ff;
-  --ruby: #ff3b3b;
-  --pearl: #ffd7f2;
-  --emerald: #30d985;
-}
-    
+      /* gem colors */
+      --sapphire: #2bb3ff;
+      --ruby: #ff3b3b;
+      --pearl: #ffd7f2;
+      --emerald: #30d985;
     }
 
     * { box-sizing: border-box; }
@@ -31,7 +29,7 @@
     html, body {
       margin: 0;
       padding: 0;
-      background: radial-gradient(circle at top, #151515 0, #050505 60%);
+      background: radial-gradient(circle at top, #1a1224 0, var(--bg) 60%);
       color: var(--fg);
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
@@ -43,7 +41,7 @@
       flex-direction: column;
     }
 
-    header { 
+    header {
       padding: 20px 16px 14px;
       border-bottom: 1px solid rgba(255,255,255,0.12);
       text-align: center;
@@ -51,7 +49,7 @@
       top: 0;
       z-index: 5;
       backdrop-filter: blur(12px);
-      background: linear-gradient(to bottom, rgba(5,5,5,0.95), rgba(5,5,5,0.85));
+      background: linear-gradient(to bottom, rgba(7,6,10,0.95), rgba(7,6,10,0.85));
     }
 
     .brand {
@@ -59,7 +57,7 @@
       font-size: 14px;
       letter-spacing: 1.4px;
       text-transform: uppercase;
-      background: linear-gradient(90deg, var(--primary), var(--primary-soft));
+      background: linear-gradient(90deg, var(--brand), var(--brand-soft));
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -89,12 +87,12 @@
       border: 1px solid rgba(255,255,255,0.12);
       padding: 16px 14px;
       margin-bottom: 12px;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.4);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.45);
     }
 
     .card--glow {
-      border: 1px solid rgba(212,175,55,0.55);
-      box-shadow: 0 0 22px rgba(212,175,55,0.16);
+      border: 1px solid rgba(167,139,250,0.55);
+      box-shadow: 0 0 22px rgba(249,168,212,0.12);
     }
 
     .meta {
@@ -129,17 +127,17 @@
     }
 
     .answer input {
-      accent-color: var(--primary);
+      accent-color: var(--brand);
       transform: scale(1.1);
     }
 
     .answer:hover {
-      border-color: rgba(243,210,107,0.9);
+      border-color: rgba(249,168,212,0.85);
     }
 
     .answer.selected {
-      border-color: var(--primary-soft);
-      background: radial-gradient(circle at left, rgba(243,210,107,0.2), rgba(0,0,0,0.6));
+      border-color: rgba(167,139,250,0.95);
+      background: radial-gradient(circle at left, rgba(167,139,250,0.18), rgba(0,0,0,0.6));
       transform: translateY(-1px);
     }
 
@@ -162,8 +160,8 @@
     }
 
     .btn-primary {
-      background: linear-gradient(90deg, var(--primary), var(--primary-soft));
-      color: #111;
+      background: linear-gradient(90deg, var(--brand), var(--brand-soft));
+      color: #0f0b17;
     }
 
     .btn-secondary {
@@ -197,7 +195,7 @@
       height: 100%;
       width: 0;
       border-radius: 999px;
-      background: linear-gradient(90deg, var(--primary), var(--primary-soft));
+      background: linear-gradient(90deg, var(--brand), var(--brand-soft));
       transition: width 0.18s ease-out;
     }
 
@@ -217,7 +215,7 @@
       padding: 14px 14px 16px;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,0.16);
-      background: radial-gradient(circle at top left, rgba(243,210,107,0.16), #0b0b0b);
+      background: radial-gradient(circle at top left, rgba(167,139,250,0.14), #0b0a10);
       display: none;
     }
 
@@ -247,7 +245,7 @@
       width: 10px;
       height: 10px;
       border-radius: 999px;
-      background: var(--primary);
+      background: var(--brand);
     }
 
     .bars {
@@ -297,21 +295,6 @@
       font-weight: 800;
     }
 
-    .chips {
-      margin-top: 4px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-    }
-
-    .chip {
-      font-size: 11px;
-      padding: 4px 7px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.22);
-      color: var(--muted);
-    }
-
     .bullets {
       margin: 4px 0 0;
       padding-left: 18px;
@@ -335,7 +318,7 @@
     }
 
     .profile-tools input[type="text"] {
-      background: #0b0b0b;
+      background: #0b0b12;
       border-radius: 10px;
       border: 1px solid rgba(255,255,255,0.2);
       padding: 8px 9px;
@@ -353,7 +336,7 @@
       margin-top: 10px;
       border-radius: 16px;
       border: 1px dashed rgba(255,255,255,0.24);
-      background: #050505;
+      background: #05050a;
       padding: 8px;
       text-align: center;
     }
@@ -371,7 +354,7 @@
       color: var(--muted);
       padding: 10px 16px 18px;
       margin-top: auto;
-      opacity: 0.8;
+      opacity: 0.85;
     }
 
     .badge-legal {
@@ -396,12 +379,11 @@
 <div class="wrap">
   <div class="card card--glow">
     <div class="meta">
-      This quiz is designed for Teleza Reeves — to help you understand how you naturally move in money,
+      This quiz is created by Teleza Reeves — to help you understand how you naturally move in money,
       business, and community. Choose the answer that sounds most like you <b>most of the time</b>.
     </div>
   </div>
 
-  <!-- Progress + quiz + result layout -->
   <div class="quiz-layout">
     <div>
       <div class="card">
@@ -435,6 +417,7 @@
           </div>
           <div class="profile-row">
             <input type="text" id="displayName" placeholder="Your name (optional)">
+            <input type="text" id="brandTag" placeholder="@handle or tagline (optional)">
             <input type="file" id="photoInput" accept="image/*">
             <button class="btn-primary" id="makeCard" type="button">Generate My Share Card</button>
           </div>
@@ -456,19 +439,11 @@
 </div>
 
 <script>
-  /**********************
-   *  ADMIN CONFIG AREA *
-   **********************
-   * You can edit everything in APP_CONFIG without touching the app logic.
-   * - Change colors, fonts, texts, questions, descriptions.
-   * - Add more quizzes later by copying the structure.
-   */
-
   const APP_CONFIG = {
     brand: {
-      primary: "var(--primary)",
-      primarySoft: "var(--primary-soft)",
-      background: "#050505",
+      primary: getComputedStyle(document.documentElement).getPropertyValue("--brand").trim(),
+      primarySoft: getComputedStyle(document.documentElement).getPropertyValue("--brand-soft").trim(),
+      background: getComputedStyle(document.documentElement).getPropertyValue("--bg").trim(),
       fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
     },
     gems: {
@@ -691,7 +666,6 @@
     }
   };
 
-  // Define quiz questions (easy for you to edit later).
   APP_CONFIG.quiz.questions = [
     {
       text: "What gets you excited to start a new project?",
@@ -834,14 +808,10 @@
         sapphire: "Experience and community.",
         ruby: "ROI and speed.",
         pearl: "Mission and trust.",
-      emerald: "Specs and reliability."
+        emerald: "Specs and reliability."
       }
     }
   ];
-
-  /***************
-   * APP LOGIC   *
-   ***************/
 
   const questions = APP_CONFIG.quiz.questions;
   const totalQuestions = questions.length;
@@ -856,7 +826,7 @@
   const profileTools = document.getElementById("profileTools");
 
   let currentIndex = 0;
-  let answers = {}; // key: question index, value: gem key
+  let answers = {};
 
   function updateProgress() {
     const answeredCount = Object.keys(answers).length;
@@ -903,10 +873,8 @@
       label.appendChild(input);
       label.appendChild(span);
 
-      label.addEventListener("click", (e) => {
-        // highlight this one
+      label.addEventListener("click", () => {
         answers[idx] = key;
-        // clear selection classes
         answersWrap.querySelectorAll(".answer").forEach(a => a.classList.remove("selected"));
         label.classList.add("selected");
         updateProgress();
@@ -931,16 +899,14 @@
     }
     const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
     const pct = {};
-    Object.keys(counts).forEach(k => {
-      pct[k] = Math.round((counts[k] / total) * 100);
-    });
+    Object.keys(counts).forEach(k => pct[k] = Math.round((counts[k] / total) * 100));
     const sorted = Object.entries(pct).sort((a, b) => b[1] - a[1]);
     const topKey = sorted[0][0];
     return { counts, pct, topKey, ranking: sorted };
   }
 
   function colorForGem(key) {
-    return APP_CONFIG.gems[key]?.color || "var(--primary)";
+    return APP_CONFIG.gems[key]?.color || "var(--brand)";
   }
 
   function renderResults() {
@@ -952,11 +918,12 @@
     const barsHTML = ["sapphire", "ruby", "pearl", "emerald"].map(k => {
       const label = APP_CONFIG.gems[k].label;
       const value = pct[k] || 0;
+      const c = colorForGem(k);
       return `
         <div class="bar-row">
           <div class="bar-label">${label}</div>
           <div class="bar-shell">
-            <div class="bar-fill" style="width:${value}%;background:linear-gradient(90deg, ${getComputedStyle(document.documentElement).getPropertyValue("--primary")}, ${getComputedStyle(document.documentElement).getPropertyValue("--primary-soft")});"></div>
+            <div class="bar-fill" style="width:${value}%;background:linear-gradient(90deg, ${c}, rgba(255,255,255,0.25));"></div>
           </div>
           <div class="bar-val">${value}%</div>
         </div>
@@ -1010,7 +977,6 @@
   });
 
   nextBtn.addEventListener("click", () => {
-    // validate current
     if (!answers[currentIndex]) {
       alert("Please select an answer for this question first.");
       return;
@@ -1019,7 +985,6 @@
       currentIndex++;
       renderQuestion(currentIndex);
     } else {
-      // all done?
       const answeredCount = Object.keys(answers).length;
       if (answeredCount < totalQuestions) {
         alert("Please answer all questions to see your results.");
@@ -1030,7 +995,6 @@
     }
   });
 
-  // Initial render
   renderQuestion(currentIndex);
 
   /*******************************
@@ -1071,18 +1035,16 @@
   }
 
   function roundRect(ctx, x, y, w, h, r) {
-    const rx = r;
-    const ry = r;
     ctx.beginPath();
-    ctx.moveTo(x + rx, y);
-    ctx.lineTo(x + w - rx, y);
-    ctx.quadraticCurveTo(x + w, y, x + w, y + ry);
-    ctx.lineTo(x + w, y + h - ry);
-    ctx.quadraticCurveTo(x + w, y + h, x + w - rx, y + h);
-    ctx.lineTo(x + rx, y + h);
-    ctx.quadraticCurveTo(x, y + h, x, y + h - ry);
-    ctx.lineTo(x, y + ry);
-    ctx.quadraticCurveTo(x, y, x + rx, y);
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
     ctx.closePath();
   }
 
@@ -1091,7 +1053,7 @@
     const gem = APP_CONFIG.gems[topKey];
 
     const W = 1080;
-    const H = 1350; // IG portrait
+    const H = 1350;
     const pad = 60;
 
     const canvas = document.createElement("canvas");
@@ -1101,8 +1063,8 @@
 
     // Background
     const grad = ctx.createLinearGradient(0, 0, W, H);
-    grad.addColorStop(0, "#050505");
-    grad.addColorStop(1, "#141414");
+    grad.addColorStop(0, "#1a1224");
+    grad.addColorStop(1, "#07060a");
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, W, H);
 
@@ -1111,28 +1073,29 @@
     const CW = W - 2 * pad;
     const CH = H - 2 * pad;
 
-    // Main inner card
-    ctx.fillStyle = "rgba(0,0,0,0.7)";
+    // Inner card
+    ctx.fillStyle = "rgba(0,0,0,0.68)";
     ctx.strokeStyle = "rgba(255,255,255,0.22)";
     ctx.lineWidth = 2;
     roundRect(ctx, CX, CY, CW, CH, 34);
     ctx.fill();
     ctx.stroke();
 
-    // Brand text
+    // Brand header
     ctx.fillStyle = "#ffffff";
     ctx.font = "900 52px " + APP_CONFIG.brand.fontFamily;
-    ctx.fillText("Teleza Reeves", CX + 40, CY + 80);
+    ctx.fillText("TELEZA REEVES", CX + 40, CY + 80);
 
     // Top GEM
     ctx.font = "700 34px " + APP_CONFIG.brand.fontFamily;
     ctx.fillStyle = APP_CONFIG.brand.primarySoft;
     ctx.fillText(("TOP GEM: " + gem.label).toUpperCase(), CX + 40, CY + 130);
 
-    // Photo circle on right
+    // Photo circle
     const P = 220;
     const pX = CX + CW - P - 40;
     const pY = CY + 40;
+
     ctx.save();
     ctx.beginPath();
     ctx.arc(pX + P / 2, pY + P / 2, P / 2, 0, Math.PI * 2);
@@ -1140,6 +1103,7 @@
     ctx.clip();
     ctx.fillStyle = "#222";
     ctx.fillRect(pX, pY, P, P);
+
     if (photo) {
       const ar = photo.width / photo.height;
       let sx = 0, sy = 0, sw = photo.width, sh = photo.height;
@@ -1151,82 +1115,56 @@
         sy = (photo.height - sh) / 2;
       }
       ctx.drawImage(photo, sx, sy, sw, sh, pX, pY, P, P);
-      makeCardBtn.addEventListener("click", () => {
-  const results = computeResults();
-  if (!results) {
-    alert("Results not found.");
-    return;
-  }
-
-  const canvas = drawShareCard(
-    { pct: results.pct, topKey: results.topKey },
-    loadedPhoto
-  );
-
-  const url = canvas.toDataURL("image/png");
-  cardImg.src = url;
-  cardPreview.style.display = "block";
-  downloadBtn.style.display = "inline-block";
-
-  downloadBtn.onclick = () => {
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "gems-share-card.png";
-    a.click();
-  };
-});
-
     }
     ctx.restore();
+
     ctx.strokeStyle = "rgba(255,255,255,0.35)";
     ctx.lineWidth = 4;
     ctx.beginPath();
     ctx.arc(pX + P / 2, pY + P / 2, P / 2, 0, Math.PI * 2);
     ctx.stroke();
 
-    // GEMS Mix section
+    // GEMS Mix
     let y = CY + 210;
     ctx.fillStyle = "#ffffff";
     ctx.font = "800 32px " + APP_CONFIG.brand.fontFamily;
     ctx.fillText("YOUR GEMS MIX", CX + 40, y);
     y += 20;
 
-    const labels = ["sapphire", "ruby", "pearl", "emerald"];
+    const keys = ["sapphire", "ruby", "pearl", "emerald"];
     const barW = CW - 160 - P;
     const barH = 24;
     const startX = CX + 40;
     const barX = startX + 160;
 
-    labels.forEach((key) => {
+    keys.forEach((key) => {
       const lab = APP_CONFIG.gems[key].label;
-      const value = data.pct[key] || 0;
+      const value = pct[key] || 0;
+      const gemColor = getComputedStyle(document.documentElement).getPropertyValue(`--${key}`).trim() || "#fff";
       y += 48;
 
       ctx.font = "600 24px " + APP_CONFIG.brand.fontFamily;
       ctx.fillStyle = "#e0e0e0";
       ctx.fillText(lab, startX, y);
 
-      // Shell
       ctx.fillStyle = "rgba(255,255,255,0.08)";
       roundRect(ctx, barX, y - 22, barW, barH, 12);
       ctx.fill();
 
-      // Fill
       const w = Math.max(6, Math.round((barW * value) / 100));
       const barGrad = ctx.createLinearGradient(barX, y - 22, barX + w, y - 22);
-      barGrad.addColorStop(0, "var(--primary)");
-      barGrad.addColorStop(1, "var(--primary-soft)");
+      barGrad.addColorStop(0, gemColor);
+      barGrad.addColorStop(1, "rgba(255,255,255,0.35)");
       ctx.fillStyle = barGrad;
       roundRect(ctx, barX, y - 22, w, barH, 12);
       ctx.fill();
 
-      // Percent text
       ctx.font = "700 22px " + APP_CONFIG.brand.fontFamily;
       ctx.fillStyle = "#ffffff";
       ctx.fillText(value + "%", barX + barW + 16, y - 2);
     });
 
-    // How to win line
+    // How to win
     y += 60;
     ctx.font = "800 30px " + APP_CONFIG.brand.fontFamily;
     ctx.fillStyle = "#ffffff";
@@ -1238,82 +1176,56 @@
     const exampleTip = gem.howToWin[0] || "";
     wrapText(ctx, exampleTip, CX + 40, y + 20, CW - 80, 30);
 
-   // Name near bottom (single field, no @handle)
-const nameVal = (document.getElementById("displayName").value || "").trim();
+    // Name + handle bottom
+    const nameVal = (document.getElementById("displayName").value || "").trim();
+    const tagVal = (document.getElementById("brandTag").value || "").trim();
+    const bottomY = H - 110;
 
-// --- SAFE FOOTER ZONE (prevents IG overlay + clipping) ---
-const footerLineY = H - 120;        // move the primary line UP
-const footerTextY = footerLineY - 12;
-const nameY = footerLineY - 44;      // name sits above the line
+    if (nameVal) {
+      ctx.font = "800 30px " + APP_CONFIG.brand.fontFamily;
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText(nameVal, CX + 40, bottomY);
+    }
+    if (tagVal) {
+      ctx.font = "600 24px " + APP_CONFIG.brand.fontFamily;
+      ctx.fillStyle = "#d0d0d0";
+      ctx.fillText(tagVal, CX + 40, bottomY + 30);
+    }
 
-if (nameVal) {
-  ctx.font = "800 34px " + APP_CONFIG.brand.fontFamily;
-  ctx.fillStyle = "#ffffff";
-  ctx.fillText(nameVal, CX + 40, nameY);
-}
+    // Bottom strip + tag
+    const lineY = H - 60;
+    ctx.strokeStyle = APP_CONFIG.brand.primary;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(CX + 40, lineY);
+    ctx.lineTo(CX + CW - 40, lineY);
+    ctx.stroke();
 
-// primary footer line
-ctx.strokeStyle = "var(--primary)";
-ctx.lineWidth = 3;
-ctx.beginPath();
-ctx.moveTo(CX + 40, footerLineY);
-ctx.lineTo(CX + CW - 40, footerLineY);
-ctx.stroke();
-
-// Brand text (inside safe zone)
-ctx.font = "800 22px " + APP_CONFIG.brand.fontFamily;
-ctx.fillStyle = "var(--primary)";
-ctx.fillText("Teleza Reeves • GEMS PERSONALITY", CX + 48, footerTextY);
-
+    ctx.font = "800 22px " + APP_CONFIG.brand.fontFamily;
+    ctx.fillStyle = APP_CONFIG.brand.primary;
+    ctx.fillText("TELEZA REEVES • GEMS PERSONALITY", CX + 48, lineY - 12);
 
     return canvas;
-    // Wire up Generate button (MUST be outside drawShareCard)
-makeCardBtn.addEventListener("click", () => {
-  try {
-    // 1) Get results safely
-    const r = (typeof computeResults === "function") ? computeResults() : null;
-    if (!r) {
-      alert("Please complete the quiz first, then generate your card.");
-      return;
-    }
+  }
 
-    // Support both shapes: r.pct or r.pct.sapphire... and r.topKey
-    const pct = r.pct || r.percentages || r.scores;
-    const topKey = r.topKey || r.top || r.primaryGem;
-
-    if (!pct || !topKey) {
-      alert("Results not ready yet. Finish the quiz, then try again.");
-      return;
-    }
-
-    // 2) Draw card
+  makeCardBtn.addEventListener("click", () => {
+    const { pct, topKey } = computeResults();
     const canvas = drawShareCard({ pct, topKey }, loadedPhoto);
-    if (!canvas || !canvas.toDataURL) {
-      alert("Card failed to generate (canvas missing).");
-      return;
-    }
-
-    // 3) Show preview + enable download
     const url = canvas.toDataURL("image/png");
+
     cardImg.src = url;
     cardPreview.style.display = "block";
     downloadBtn.style.display = "inline-block";
 
     downloadBtn.onclick = () => {
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "gems-share-card.png";
-      a.click();
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "teleza-reeves-gems-card.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     };
-  } catch (err) {
-    console.error("Share card error:", err);
-    alert("Share card failed. If you can, open Console to see the error.");
-  }
-});
-
-  }
-
-
+  });
 </script>
 </body>
 </html>
