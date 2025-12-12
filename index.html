@@ -1132,7 +1132,7 @@
     y += 20;
 
     const keys = ["sapphire", "ruby", "pearl", "emerald"];
-    const barW = CW - 160 - P;
+    const barW = CW - 200 - P;
     const barH = 24;
     const startX = CX + 40;
     const barX = startX + 160;
@@ -1173,37 +1173,77 @@
     y += 12;
     ctx.font = "400 22px " + APP_CONFIG.brand.fontFamily;
     ctx.fillStyle = "#dcdcdc";
-    const exampleTip = gem.howToWin[0] || "";
-    wrapText(ctx, exampleTip, CX + 40, y + 20, CW - 80, 30);
+    const tips = gem.howToWin.slice(0, 4);
+let tipY = y + 20;
 
-    // Name + handle bottom
-    const nameVal = (document.getElementById("displayName").value || "").trim();
-    const tagVal = (document.getElementById("brandTag").value || "").trim();
-    const bottomY = H - 110;
+ctx.font = "400 22px " + APP_CONFIG.brand.fontFamily;
+ctx.fillStyle = "#dcdcdc";
 
-    if (nameVal) {
-      ctx.font = "800 30px " + APP_CONFIG.brand.fontFamily;
-      ctx.fillStyle = "#ffffff";
-      ctx.fillText(nameVal, CX + 40, bottomY);
-    }
-    if (tagVal) {
-      ctx.font = "600 24px " + APP_CONFIG.brand.fontFamily;
-      ctx.fillStyle = "#d0d0d0";
-      ctx.fillText(tagVal, CX + 40, bottomY + 30);
-    }
+tips.forEach(tip => {
+  tipY = wrapText(ctx, "• " + tip, CX + 40, tipY, CW - 80, 30) + 10;
+});
+
+
+    
+    // SINGLE NAME AREA (no overlap)
+const nameVal = (document.getElementById("displayName").value || "").trim();
+
+const nameY = H - 130;
+
+if (nameVal) {
+  ctx.font = "800 32px " + APP_CONFIG.brand.fontFamily;
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(nameVal, CX + 40, nameY);
+}
+
+// subtle divider
+ctx.strokeStyle = "rgba(255,255,255,0.25)";
+ctx.lineWidth = 2;
+ctx.beginPath();
+ctx.moveTo(CX + 40, nameY + 20);
+ctx.lineTo(CX + CW - 40, nameY + 20);
+ctx.stroke();
+
+// branding BELOW the name
+ctx.font = "600 20px " + APP_CONFIG.brand.fontFamily;
+ctx.fillStyle = "#bdbdbd";
+ctx.fillText("GEMS Personality • Teleza Reeves", CX + 40, nameY + 52);
+
 
     // Bottom strip + tag
-    const lineY = H - 60;
-    ctx.strokeStyle = APP_CONFIG.brand.primary;
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(CX + 40, lineY);
-    ctx.lineTo(CX + CW - 40, lineY);
-    ctx.stroke();
+   const nameVal = (document.getElementById("displayName").value || "").trim();
+const tagVal  = (document.getElementById("brandTag").value || "").trim();
 
-    ctx.font = "800 22px " + APP_CONFIG.brand.fontFamily;
-    ctx.fillStyle = APP_CONFIG.brand.primary;
-    ctx.fillText("TELEZA REEVES • GEMS PERSONALITY", CX + 48, lineY - 12);
+const nameY = H - 150;
+
+if (nameVal) {
+  ctx.font = "800 32px " + APP_CONFIG.brand.fontFamily;
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(nameVal, CX + 40, nameY);
+}
+
+let nextY = nameY + 34;
+
+if (tagVal) {
+  ctx.font = "600 24px " + APP_CONFIG.brand.fontFamily;
+  ctx.fillStyle = "#d0d0d0";
+  ctx.fillText(tagVal, CX + 40, nextY);
+  nextY += 28;
+}
+
+// divider below whatever we printed
+ctx.strokeStyle = "rgba(255,255,255,0.25)";
+ctx.lineWidth = 2;
+ctx.beginPath();
+ctx.moveTo(CX + 40, nextY + 14);
+ctx.lineTo(CX + CW - 40, nextY + 14);
+ctx.stroke();
+
+// small branding under divider
+ctx.font = "600 20px " + APP_CONFIG.brand.fontFamily;
+ctx.fillStyle = "#bdbdbd";
+ctx.fillText("GEMS Personality • Teleza Reeves", CX + 40, nextY + 46);
+
 
     return canvas;
   }
