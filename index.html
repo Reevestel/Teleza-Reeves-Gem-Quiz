@@ -1209,34 +1209,33 @@
     const exampleTip = gem.howToWin[0] || "";
     wrapText(ctx, exampleTip, CX + 40, y + 20, CW - 80, 30);
 
-    // Name + handle near bottom
-    const nameVal = (document.getElementById("displayName").value || "").trim();
-    const tagVal = (document.getElementById("brandTag").value || "").trim();
+   // Name near bottom (single field, no @handle)
+const nameVal = (document.getElementById("displayName").value || "").trim();
 
-    const bottomY = H - 110;
-    if (nameVal) {
-      ctx.font = "800 30px " + APP_CONFIG.brand.fontFamily;
-      ctx.fillStyle = "#ffffff";
-      ctx.fillText(nameVal, CX + 40, bottomY);
-    }
-    if (tagVal) {
-      ctx.font = "600 24px " + APP_CONFIG.brand.fontFamily;
-      ctx.fillStyle = "#d0d0d0";
-      ctx.fillText(tagVal, CX + 40, bottomY + 30);
-    }
+// --- SAFE FOOTER ZONE (prevents IG overlay + clipping) ---
+const footerLineY = H - 120;        // move the gold line UP
+const footerTextY = footerLineY - 12;
+const nameY = footerLineY - 44;      // name sits above the line
 
-    // Bottom strip
-    const lineY = H - 60;
-    ctx.strokeStyle = "#d4af37";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(CX + 40, lineY);
-    ctx.lineTo(CX + CW - 40, lineY);
-    ctx.stroke();
+if (nameVal) {
+  ctx.font = "800 34px " + APP_CONFIG.brand.fontFamily;
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(nameVal, CX + 40, nameY);
+}
 
-    ctx.font = "800 22px " + APP_CONFIG.brand.fontFamily;
-    ctx.fillStyle = "#d4af37";
-    ctx.fillText("1000 FAMILIES RICH • GEMS PERSONALITY", CX + 48, lineY - 12);
+// Gold footer line
+ctx.strokeStyle = "#d4af37";
+ctx.lineWidth = 3;
+ctx.beginPath();
+ctx.moveTo(CX + 40, footerLineY);
+ctx.lineTo(CX + CW - 40, footerLineY);
+ctx.stroke();
+
+// Brand text (inside safe zone)
+ctx.font = "800 22px " + APP_CONFIG.brand.fontFamily;
+ctx.fillStyle = "#d4af37";
+ctx.fillText("1000 FAMILIES RICH • GEMS PERSONALITY", CX + 48, footerTextY);
+
 
     return canvas;
   }
