@@ -1151,6 +1151,31 @@
         sy = (photo.height - sh) / 2;
       }
       ctx.drawImage(photo, sx, sy, sw, sh, pX, pY, P, P);
+      makeCardBtn.addEventListener("click", () => {
+  const results = computeResults();
+  if (!results) {
+    alert("Results not found.");
+    return;
+  }
+
+  const canvas = drawShareCard(
+    { pct: results.pct, topKey: results.topKey },
+    loadedPhoto
+  );
+
+  const url = canvas.toDataURL("image/png");
+  cardImg.src = url;
+  cardPreview.style.display = "block";
+  downloadBtn.style.display = "inline-block";
+
+  downloadBtn.onclick = () => {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "gems-share-card.png";
+    a.click();
+  };
+});
+
     }
     ctx.restore();
     ctx.strokeStyle = "rgba(255,255,255,0.35)";
@@ -1242,28 +1267,53 @@ ctx.fillText("Teleza Reeves • GEMS PERSONALITY", CX + 48, footerTextY);
 
 
     return canvas;
-  }
+    // Wire up Generate button (MUST be outside drawShareCard)
+makeCardBtn.addEventListener("click", () => {
+  try {
+    // 1) Get results safely
+    const r = (typeof computeResults === "function") ? computeResults() : null;
+    if (!r) {
+      alert("Please complete the quiz first, then generate your card.");
+      return;
+    }
 
-  makeCardBtn.addEventListener("click", () => {
-    const { pct, topKey } = computeResults();
-    const data = { pct, topKey };
+    // Support both shapes: r.pct or r.pct.sapphire... and r.topKey
+    const pct = r.pct || r.percentages || r.scores;
+    const topKey = r.topKey || r.top || r.primaryGem;
 
-    const canvas = drawShareCard(data, loadedPhoto);
+    if (!pct || !topKey) {
+      alert("Results not ready yet. Finish the quiz, then try again.");
+      return;
+    }
+
+    // 2) Draw card
+    const canvas = drawShareCard({ pct, topKey }, loadedPhoto);
+    if (!canvas || !canvas.toDataURL) {
+      alert("Card failed to generate (canvas missing).");
+      return;
+    }
+
+    // 3) Show preview + enable download
     const url = canvas.toDataURL("image/png");
-
     cardImg.src = url;
     cardPreview.style.display = "block";
     downloadBtn.style.display = "inline-block";
 
     downloadBtn.onclick = () => {
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "1000families-gems-card.png";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "gems-share-card.png";
+      a.click();
     };
-  });
+  } catch (err) {
+    console.error("Share card error:", err);
+    alert("Share card failed. If you can, open Console to see the error.");
+  }
+});
+
+  }
+
+
 </script>
 </body>
 </html>
