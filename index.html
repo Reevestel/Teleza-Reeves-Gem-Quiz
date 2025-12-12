@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>1000 Families Rich — GEMS Quiz</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    :root {
+      --bg: #050505;
+      --bg-card: #101010;
+      --fg: #ffffff;
+      --muted: #bfbfbf;
+      --gold: #d4af37;
+      --gold-soft: #f3d26b;
+      --border-soft: rgba(255,255,255,0.18);
+
+      /* gem colors */
+      --sapphire: #2bb3ff;
+      --ruby: #ff3b3b;
+      --pearl: #ffd7f2;
+      --emerald: #30d985;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #151515 0, #050505 60%);
+      color: var(--fg);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 20px 16px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(to bottom, rgba(5,5,5,0.95), rgba(5,5,5,0.85));
+    }
+
+    .brand {
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    h1 {
+      margin: 4px 0 4px;
+      font-size: clamp(22px, 5vw, 30px);
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 16px;
+      padding-bottom: 60px;
+      width: 100%;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 16px 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.4);
+    }
+
+    .card--glow {
+      border: 1px solid rgba(212,175,55,0.55);
+      box-shadow: 0 0 22px rgba(212,175,55,0.16);
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .q {
+      font-weight: 700;
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    .answers {
+      display: grid;
+      gap: 8px;
+    }
+
+    .answer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: linear-gradient(90deg, rgba(255,255,255,0.04), rgba(0,0,0,0.4));
+      cursor: pointer;
+      font-size: 14px;
+      transition: border-color 0.15s ease, background 0.15s ease, transform 0.08s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .answer input {
+      accent-color: var(--gold);
+      transform: scale(1.1);
+    }
+
+    .answer:hover {
+      border-color: rgba(243,210,107,0.9);
+    }
+
+    .answer.selected {
+      border-color: var(--gold-soft);
+      background: radial-gradient(circle at left, rgba(243,210,107,0.2), rgba(0,0,0,0.6));
+      transform: translateY(-1px);
+    }
+
+    .buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 14px 0 4px;
+    }
+
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 9px 18px;
+      font-weight: 800;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+      color: #111;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--fg);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .progress-shell {
+      margin: 10px 0 14px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .progress-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.07);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+      transition: width 0.18s ease-out;
+    }
+
+    .quiz-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    @media (min-width: 800px) {
+      .quiz-layout {
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      }
+    }
+
+    .result {
+      padding: 14px 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: radial-gradient(circle at top left, rgba(243,210,107,0.16), #0b0b0b);
+      display: none;
+    }
+
+    .result-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.24);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .gem-pill {
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--gold);
+    }
+
+    .bars {
+      margin-top: 8px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .bar-label {
+      width: 80px;
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    .bar-shell {
+      flex: 1;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 999px;
+    }
+
+    .bar-val {
+      width: 42px;
+      text-align: right;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .section-title {
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .chips {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .chip {
+      font-size: 11px;
+      padding: 4px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.22);
+      color: var(--muted);
+    }
+
+    .bullets {
+      margin: 4px 0 0;
+      padding-left: 18px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .bullets li { margin-bottom: 3px; }
+
+    .profile-tools {
+      margin-top: 10px;
+      display: none;
+    }
+
+    .profile-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .profile-tools input[type="text"] {
+      background: #0b0b0b;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 8px 9px;
+      font-size: 13px;
+      color: var(--fg);
+      min-width: 180px;
+    }
+
+    .profile-tools input[type="file"] {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .preview {
+      margin-top: 10px;
+      border-radius: 16px;
+      border: 1px dashed rgba(255,255,255,0.24);
+      background: #050505;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .preview img {
+      max-width: 100%;
+      border-radius: 14px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      padding: 10px 16px 18px;
+      margin-top: auto;
+      opacity: 0.8;
+    }
+
+    .badge-legal {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 2px 6px;
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">1000 Families Rich</div>
+  <h1>GEMS Personality Quiz</h1>
+  <div class="sub">Discover your dominant money-making personality: Sapphire • Ruby • Pearl • Emerald</div>
+</header>
+
+<div class="wrap">
+  <div class="card card--glow">
+    <div class="meta">
+      This quiz is designed for 1000 Families Rich — to help you understand how you naturally move in money,
+      business, and community. Choose the answer that sounds most like you <b>most of the time</b>.
+    </div>
+  </div>
+
+  <!-- Progress + quiz + result layout -->
+  <div class="quiz-layout">
+    <div>
+      <div class="card">
+        <div class="progress-shell">
+          <div class="progress-label-row">
+            <span id="progressText">Question 1 of 1</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+
+        <div id="questionContainer"></div>
+
+        <div class="buttons">
+          <button class="btn-secondary" id="prevBtn" type="button">Back</button>
+          <button class="btn-primary" id="nextBtn" type="button">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div id="resultPanel" class="result"></div>
+
+      <div class="profile-tools" id="profileTools">
+        <div class="card">
+          <div class="q">Generate your share card</div>
+          <div class="meta" style="margin-bottom:6px;">
+            Perfect for Instagram / TikTok — 1080×1350 portrait. Add your name and optional photo, then download as PNG.
+          </div>
+          <div class="profile-row">
+            <input type="text" id="displayName" placeholder="Your name (optional)">
+            <input type="text" id="brandTag" placeholder="@handle or tagline (optional)">
+            <input type="file" id="photoInput" accept="image/*">
+            <button class="btn-primary" id="makeCard" type="button">Generate My Share Card</button>
+          </div>
+          <div class="profile-row">
+            <button class="btn-secondary" id="downloadCard" type="button" style="display:none;">Download PNG</button>
+          </div>
+          <div class="preview" id="cardPreview" style="display:none;">
+            <img id="cardImg" alt="Share card preview">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="badge-legal">For personal insight only</span><br>
+    Not medical, legal, or financial advice. © 1000 Families Rich
+  </div>
+</div>
+
+<script>
+  /**********************
+   *  ADMIN CONFIG AREA *
+   **********************
+   * You can edit everything in APP_CONFIG without touching the app logic.
+   * - Change colors, fonts, texts, questions, descriptions.
+   * - Add more quizzes later by copying the structure.
+   */
+
+  const APP_CONFIG = {
+    brand: {
+      primary: "#d4af37",
+      primarySoft: "#f3d26b",
+      background: "#050505",
+      fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+    },
+    gems: {
+      sapphire: {
+        label: "Sapphire",
+        color: "var(--sapphire)",
+        description: "People-oriented • Active • Magnetic. You bring the fun, the story, and the vibe.",
+        benefits: [
+          "You attract people and attention effortlessly.",
+          "You make experiences feel fun and memorable.",
+          "You keep energy high in teams and communities.",
+          "You’re a natural storyteller and promoter.",
+          "You help people feel seen and included.",
+          "You’re great at vision casting and hype.",
+          "You’re flexible and open to new ideas.",
+          "You inspire people to start and take action.",
+          "You’re rarely boring — you bring flavor.",
+          "You help brands feel human and alive."
+        ],
+        challenges: [
+          "Finishing what you start when excitement wears off.",
+          "Avoiding over-committing to too many ideas at once.",
+          "Sticking with boring but necessary routines.",
+          "Getting lost in vibes and neglecting structure.",
+          "Under-estimating how long tasks actually take.",
+          "Letting other people’s energy distract you.",
+          "Avoiding detailed tracking of money and metrics.",
+          "Procrastinating on unsexy admin tasks.",
+          "Saying yes when you really mean no.",
+          "Being consistent when you feel ‘off’ that day."
+        ],
+        tips: [
+          "Use timers and short sprints to get through boring tasks.",
+          "Partner with Emerald or Ruby types for structure and follow-through.",
+          "Batch content on high-energy days, schedule it to post later.",
+          "Keep a simple weekly scoreboard for money, content, and follow-ups.",
+          "Create repeatable rituals so discipline feels like a vibe, not a punishment.",
+          "Say yes only to what aligns with your bigger vision.",
+          "Turn your stories into offers: always bring it back to a next step.",
+          "Put deadlines on your ideas so they don’t float forever.",
+          "Reward yourself with fun after completing focused work blocks.",
+          "Remember: charisma opens doors, consistency keeps them open."
+        ],
+        howToWin: [
+          "Lead from the front with energy — host lives, events, and launches.",
+          "Own the role of storyteller: always highlight transformation, not just features.",
+          "Build a simple content ecosystem around your face, story, and lifestyle.",
+          "Use systems that are visual and fun (boards, sticky notes, simple dashboards).",
+          "Collaborate with structured teammates so your ideas become assets, not chaos.",
+          "Monetize your community: referrals, affiliate offers, group programs.",
+          "Create ‘always-on’ offers in your bio so your audience can move when they’re ready.",
+          "Protect your energy with boundaries; not every invite deserves your time.",
+          "Keep your brand look luxury and consistent so your vibe matches your value.",
+          "Treat fun as a strategy: people buy from the energy they want to feel."
+        ]
+      },
+      ruby: {
+        label: "Ruby",
+        color: "var(--ruby)",
+        description: "Task-oriented • Active • Competitive. You’re here to win, build, and scale.",
+        benefits: [
+          "You move fast and hate wasting time.",
+          "You’re naturally driven by goals and milestones.",
+          "You’re great at selling when you believe in the offer.",
+          "You don’t shy away from pressure or big moves.",
+          "You like clear targets and clear rewards.",
+          "You can motivate a team to move now, not later.",
+          "You’re decisive when others hesitate.",
+          "You’re comfortable talking about money and results.",
+          "You think in terms of impact, not just effort.",
+          "You naturally step into leadership positions."
+        ],
+        challenges: [
+          "Impatience with slower or more sensitive people.",
+          "Pushing so hard you ignore your own emotional needs.",
+          "Focusing only on numbers and forgetting relationships.",
+          "Being harsh when giving feedback or direction.",
+          "Getting bored once a goal is reached and not stabilizing.",
+          "Seeing rest as weakness instead of strategy.",
+          "Not celebrating small wins along the way.",
+          "Under-listening because you already ‘know’ the answer.",
+          "Taking on too much to prove you can handle it.",
+          "Forgetting that sustainability beats sprints in the long run."
+        ],
+        tips: [
+          "Use clear, visible scoreboards for your goals (income, recruits, sales).",
+          "Schedule non-negotiable rest to protect your long-term performance.",
+          "Practice active listening so people feel led, not bulldozed.",
+          "Pair with Pearl types to deepen relationships and retention.",
+          "Reward yourself and your team for progress, not just final outcomes.",
+          "Document your winning moves into simple playbooks and scripts.",
+          "Use your competitive energy to beat your own best, not just others.",
+          "Focus your grind on a few key levers instead of many scattered efforts.",
+          "Communicate your expectations clearly so there’s no confusion.",
+          "Remember: leadership is not just results; it’s how people feel with you."
+        ],
+        howToWin: [
+          "Set bold but clear money and impact goals with real timelines.",
+          "Design weekly power hours focused on revenue-moving actions only.",
+          "Use your voice and presence to create urgency without fear.",
+          "Build a small inner circle that can be honest with you and keep your heart soft.",
+          "Track closing rates, follow-ups, and repeat buyers — optimize like a pro.",
+          "Train others on your mindset, discipline, and standards; don’t hoard the game.",
+          "Build assets (scripts, funnels, templates) that let your ambition scale.",
+          "Anchor your grind to a bigger mission so it stays meaningful.",
+          "Protect your mornings for strategy, not chaos.",
+          "Channel your fire into building systems, not just chasing the next win."
+        ]
+      },
+      pearl: {
+        label: "Pearl",
+        color: "var(--pearl)",
+        description: "People-oriented • Calm • Heart-led. You care deeply about impact, safety, and soul.",
+        benefits: [
+          "You make people feel safe, seen, and supported.",
+          "You’re great at customer care and retention.",
+          "You listen deeply and remember details about people.",
+          "You value purpose and alignment over quick cash.",
+          "You notice emotional undercurrents in groups.",
+          "You are trusted with secrets and real stories.",
+          "You create spaces that feel like home and healing.",
+          "You’re drawn to meaningful, transformational work.",
+          "You’re willing to walk with people through process, not rush them.",
+          "You keep the humanity inside business."
+        ],
+        challenges: [
+          "Avoiding conflict even when boundaries are needed.",
+          "Under-charging because you just want to help.",
+          "Taking on other people’s emotions as your own.",
+          "Feeling guilty when you talk about money or pricing.",
+          "Over-giving and burning out silently.",
+          "Struggling to say no to people you care about.",
+          "Delaying decisions because you don’t want to hurt feelings.",
+          "Letting fear of rejection stop you from inviting people to opportunities.",
+          "Doing a lot of invisible emotional labor that goes unrewarded.",
+          "Equating being ‘nice’ with never setting standards."
+        ],
+        tips: [
+          "Write down your prices and boundaries so you don’t negotiate against yourself.",
+          "Remember that being paid well allows you to help more people, not fewer.",
+          "Schedule emotional recovery time after heavy sessions or events.",
+          "Collaborate with Ruby types to push you into bolder invitations.",
+          "Turn your natural listening skills into powerful testimonials and case studies.",
+          "Practice saying short, firm no’s without over-explaining.",
+          "Use written scripts to invite people into programs or opportunities.",
+          "Create offers that protect your energy (group containers, office hours, etc.).",
+          "Let your story and heart be part of your marketing — it’s your superpower.",
+          "Remember: boundaries are a form of love, including for yourself."
+        ],
+        howToWin: [
+          "Position yourself as the safe, trusted guide in your space.",
+          "Design offers that are transformation-focused, not just transactional.",
+          "Use stories and testimonials to show the impact of your care.",
+          "Charge in alignment with the change you help create, not just the hours.",
+          "Systemize your follow-up and care so you don’t carry it all mentally.",
+          "Partner with structured Emerald types to build processes around your gifts.",
+          "Create community containers (groups, chats, circles) that you can lead from the heart.",
+          "Set firm office hours and boundaries so you don’t emotionally leak everywhere.",
+          "Allow money to be a reflection of the healing and impact you bring.",
+          "Lead with compassion, but protect your capacity like a serious CEO."
+        ]
+      },
+      emerald: {
+        label: "Emerald",
+        color: "var(--emerald)",
+        description: "Task-oriented • Calm • Strategic. You see patterns, systems, and risk clearly.",
+        benefits: [
+          "You think in processes, not just moments.",
+          "You naturally analyze before acting.",
+          "You help teams reduce risk and chaos.",
+          "You notice details others overlook.",
+          "You’re great at documentation and SOPs.",
+          "You bring calm structure into emotional spaces.",
+          "You’re good with systems, tools, and dashboards.",
+          "You can turn a messy idea into a clear plan.",
+          "You value quality, integrity, and accuracy.",
+          "You’re patient enough to build long-term foundations."
+        ],
+        challenges: [
+          "Over-analyzing and delaying action.",
+          "Feeling stuck until everything is ‘perfect’.",
+          "Struggling to move fast in messy, human spaces.",
+          "Getting frustrated with emotional or impulsive people.",
+          "Avoiding visibility because you don’t feel ‘ready’.",
+          "Spending more time planning than executing.",
+          "Being overly critical of yourself or your work.",
+          "Under-sharing your genius because it feels obvious to you.",
+          "Needing more data than the moment can give.",
+          "Letting fear of mistakes block experimentation."
+        ],
+        tips: [
+          "Give yourself deadlines for decisions, not just research.",
+          "Use 70% clarity as ‘enough to move’ instead of waiting for 100%.",
+          "Batch system-building time so it doesn’t replace revenue-moving actions.",
+          "Pair with Sapphire or Ruby types to spark motion and visibility.",
+          "Turn your frameworks and checklists into products or services.",
+          "Track the right numbers, not every number.",
+          "Share your behind-the-scenes thinking; people will see it as genius.",
+          "Allow small, controlled experiments to teach you faster than theory.",
+          "Design automations that protect your time and mental load.",
+          "Remember: precision is powerful, but momentum compounds it."
+        ],
+        howToWin: [
+          "Position yourself as the systems brain behind the brand or movement.",
+          "Turn your way of organizing into templates, dashboards, and structures others can use.",
+          "Own the back-end: operations, finances, tech, and quality control.",
+          "Create signature frameworks that become part of your brand language.",
+          "Use content that breaks down complex ideas into simple, visual steps.",
+          "Package your organization skills as done-for-you or consulting offers.",
+          "Partner with more visible personalities so your systems get spotlighted.",
+          "Protect deep-focus time for architecture and optimization work.",
+          "Document everything once so it can be reused many times.",
+          "Lead with calm confidence: you’re the one who keeps the machine running."
+        ]
+      }
+    },
+    quiz: {
+      title: "1000 Families Rich — GEMS Quiz",
+      questions: [] // will fill below
+    }
+  };
+
+  // Define quiz questions (easy for you to edit later).
+  APP_CONFIG.quiz.questions = [
+    {
+      text: "What gets you excited to start a new project?",
+      options: {
+        sapphire: "It sounds fun and I get to involve people.",
+        ruby: "A clear challenge, competition, or prize to win.",
+        pearl: "It helps or uplifts people I care about.",
+        emerald: "There’s a plan, data, and a well-defined process."
+      }
+    },
+    {
+      text: "When making a decision, I usually…",
+      options: {
+        sapphire: "Go with my gut and keep the vibe positive.",
+        ruby: "Choose quickly and move.",
+        pearl: "Ask who will be affected and consider feelings.",
+        emerald: "Weigh pros/cons and research first."
+      }
+    },
+    {
+      text: "At a social or business event, you can find me…",
+      options: {
+        sapphire: "Chatting with everyone and starting conversations.",
+        ruby: "Networking with a purpose—making moves and connections.",
+        pearl: "Checking in on people and making them comfortable.",
+        emerald: "Having a thoughtful 1:1 conversation off to the side."
+      }
+    },
+    {
+      text: "My ideal work style looks like…",
+      options: {
+        sapphire: "Flexible, creative, and people-first.",
+        ruby: "Fast paced, goal-driven, and results-focused.",
+        pearl: "Supportive, collaborative, and service-oriented.",
+        emerald: "Organized, detailed, and system-driven."
+      }
+    },
+    {
+      text: "Deadlines feel…",
+      options: {
+        sapphire: "Motivating if the project is exciting.",
+        ruby: "Essential—it’s how we win.",
+        pearl: "Manageable when the team is aligned.",
+        emerald: "Comforting—structure keeps quality high."
+      }
+    },
+    {
+      text: "When conflict shows up, I tend to…",
+      options: {
+        sapphire: "Lighten the mood and keep it moving.",
+        ruby: "Address it head-on and resolve it fast.",
+        pearl: "Seek harmony and listen to everyone.",
+        emerald: "Collect facts and clarify misunderstandings."
+      }
+    },
+    {
+      text: "If a plan changes last-minute…",
+      options: {
+        sapphire: "No stress—let’s improvise!",
+        ruby: "Fine—what’s the fastest path to the goal now?",
+        pearl: "I check in to make sure everyone’s okay.",
+        emerald: "I want the details and updated timeline."
+      }
+    },
+    {
+      text: "Your desk or digital life is…",
+      options: {
+        sapphire: "Organized chaos—creative piles.",
+        ruby: "Minimal—whatever helps me move fastest.",
+        pearl: "Personal—photos, notes, reminders for people.",
+        emerald: "Neat—folders, labels, templates."
+      }
+    },
+    {
+      text: "Feedback you love to hear:",
+      options: {
+        sapphire: "“You made this so fun.”",
+        ruby: "“You crushed that goal.”",
+        pearl: "“You made me feel seen.”",
+        emerald: "“Your system was flawless.”"
+      }
+    },
+    {
+      text: "When learning something new…",
+      options: {
+        sapphire: "I jump in and figure it out as I go.",
+        ruby: "I want the fastest path to mastery.",
+        pearl: "I learn best with a buddy, coach, or mentor.",
+        emerald: "I read the instructions and build a checklist."
+      }
+    },
+    {
+      text: "Your content or communication style naturally leans…",
+      options: {
+        sapphire: "Entertaining, high-energy, story-driven.",
+        ruby: "Results and proof—before/after, wins, receipts.",
+        pearl: "Encouraging, supportive, and heart-centered.",
+        emerald: "Breakdowns, how-to’s, and data."
+      }
+    },
+    {
+      text: "Biggest demotivator for you is…",
+      options: {
+        sapphire: "Boredom and rigid rules.",
+        ruby: "Feeling stalled or losing momentum.",
+        pearl: "Tension and people getting hurt.",
+        emerald: "Vague goals and sloppy execution."
+      }
+    },
+    {
+      text: "If you ran a team, your #1 priority would be…",
+      options: {
+        sapphire: "Keep morale and creativity high.",
+        ruby: "Hit ambitious, measurable targets.",
+        pearl: "Care for people and grow them.",
+        emerald: "Build scalable, clear systems."
+      }
+    },
+    {
+      text: "Which compliment lands the hardest?",
+      options: {
+        sapphire: "“You light up the room.”",
+        ruby: "“You’re unstoppable.”",
+        pearl: "“You’re so thoughtful.”",
+        emerald: "“You’re meticulous.”"
+      }
+    },
+    {
+      text: "Your planning tool of choice:",
+      options: {
+        sapphire: "Vision board / brainstorm space.",
+        ruby: "Scoreboard / KPI tracker.",
+        pearl: "Shared calendar / check-ins.",
+        emerald: "Project management with SOPs."
+      }
+    },
+    {
+      text: "When you buy, you value…",
+      options: {
+        sapphire: "Experience and community.",
+        ruby: "ROI and speed.",
+        pearl: "Mission and trust.",
+      emerald: "Specs and reliability."
+      }
+    }
+  ];
+
+  /***************
+   * APP LOGIC   *
+   ***************/
+
+  const questions = APP_CONFIG.quiz.questions;
+  const totalQuestions = questions.length;
+
+  const questionContainer = document.getElementById("questionContainer");
+  const progressText = document.getElementById("progressText");
+  const progressPercent = document.getElementById("progressPercent");
+  const progressFill = document.getElementById("progressFill");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const resultPanel = document.getElementById("resultPanel");
+  const profileTools = document.getElementById("profileTools");
+
+  let currentIndex = 0;
+  let answers = {}; // key: question index, value: gem key
+
+  function updateProgress() {
+    const answeredCount = Object.keys(answers).length;
+    const percent = Math.round((answeredCount / totalQuestions) * 100);
+    progressText.textContent = `Question ${currentIndex + 1} of ${totalQuestions}`;
+    progressPercent.textContent = `${percent}%`;
+    progressFill.style.width = `${Math.min(100, Math.max(0, Math.round(((currentIndex) / totalQuestions) * 100)))}%`;
+  }
+
+  function renderQuestion(idx) {
+    const q = questions[idx];
+    if (!q) return;
+
+    questionContainer.innerHTML = "";
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const qEl = document.createElement("div");
+    qEl.className = "q";
+    qEl.textContent = `Q${idx + 1}. ${q.text}`;
+    card.appendChild(qEl);
+
+    const answersWrap = document.createElement("div");
+    answersWrap.className = "answers";
+
+    ["sapphire", "ruby", "pearl", "emerald"].forEach(key => {
+      const text = q.options[key];
+      if (!text) return;
+
+      const label = document.createElement("label");
+      label.className = "answer";
+      if (answers[idx] === key) label.classList.add("selected");
+
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = `q${idx}`;
+      input.value = key;
+      input.checked = answers[idx] === key;
+
+      const span = document.createElement("span");
+      span.textContent = text;
+
+      label.appendChild(input);
+      label.appendChild(span);
+
+      label.addEventListener("click", (e) => {
+        // highlight this one
+        answers[idx] = key;
+        // clear selection classes
+        answersWrap.querySelectorAll(".answer").forEach(a => a.classList.remove("selected"));
+        label.classList.add("selected");
+        updateProgress();
+      });
+
+      answersWrap.appendChild(label);
+    });
+
+    card.appendChild(answersWrap);
+    questionContainer.appendChild(card);
+
+    prevBtn.disabled = idx === 0;
+    nextBtn.textContent = idx === totalQuestions - 1 ? "See My Results" : "Next";
+    updateProgress();
+  }
+
+  function computeResults() {
+    const counts = { sapphire: 0, ruby: 0, pearl: 0, emerald: 0 };
+    for (let i = 0; i < totalQuestions; i++) {
+      const val = answers[i];
+      if (val && counts.hasOwnProperty(val)) counts[val]++;
+    }
+    const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+    const pct = {};
+    Object.keys(counts).forEach(k => {
+      pct[k] = Math.round((counts[k] / total) * 100);
+    });
+    const sorted = Object.entries(pct).sort((a, b) => b[1] - a[1]);
+    const topKey = sorted[0][0];
+    return { counts, pct, topKey, ranking: sorted };
+  }
+
+  function colorForGem(key) {
+    return APP_CONFIG.gems[key]?.color || "var(--gold)";
+  }
+
+  function renderResults() {
+    const { pct, topKey } = computeResults();
+    const gem = APP_CONFIG.gems[topKey];
+
+    resultPanel.style.display = "block";
+
+    const barsHTML = ["sapphire", "ruby", "pearl", "emerald"].map(k => {
+      const label = APP_CONFIG.gems[k].label;
+      const value = pct[k] || 0;
+      return `
+        <div class="bar-row">
+          <div class="bar-label">${label}</div>
+          <div class="bar-shell">
+            <div class="bar-fill" style="width:${value}%;background:linear-gradient(90deg, ${getComputedStyle(document.documentElement).getPropertyValue("--gold")}, ${getComputedStyle(document.documentElement).getPropertyValue("--gold-soft")});"></div>
+          </div>
+          <div class="bar-val">${value}%</div>
+        </div>
+      `;
+    }).join("");
+
+    const benefitsList = gem.benefits.map(item => `<li>${item}</li>`).join("");
+    const challengesList = gem.challenges.map(item => `<li>${item}</li>`).join("");
+    const tipsList = gem.tips.map(item => `<li>${item}</li>`).join("");
+    const howToWinList = gem.howToWin.map(item => `<li>${item}</li>`).join("");
+
+    resultPanel.innerHTML = `
+      <div class="pill gem-pill">
+        <span class="dot" style="background:${colorForGem(topKey)};"></span>
+        TOP GEM: ${gem.label.toUpperCase()}
+      </div>
+      <div class="result-title">${gem.label} — ${gem.description}</div>
+
+      <div class="section-title">Your GEMS Mix</div>
+      <div class="bars">${barsHTML}</div>
+
+      <div class="section-title">Your Natural Benefits</div>
+      <ul class="bullets">${benefitsList}</ul>
+
+      <div class="section-title">Growth Edges & Challenges</div>
+      <ul class="bullets">${challengesList}</ul>
+
+      <div class="section-title">Practical Tips</div>
+      <ul class="bullets">${tipsList}</ul>
+
+      <div class="section-title">How to Win as a ${gem.label}</div>
+      <ul class="bullets">${howToWinList}</ul>
+
+      <div class="buttons" style="margin-top:10px;">
+        <button class="btn-primary" type="button" id="showShareCardBtn">Generate My Share Card</button>
+      </div>
+    `;
+
+    const shareBtn = document.getElementById("showShareCardBtn");
+    shareBtn.addEventListener("click", () => {
+      profileTools.style.display = "block";
+      profileTools.scrollIntoView({ behavior: "smooth" });
+    });
+  }
+
+  prevBtn.addEventListener("click", () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      renderQuestion(currentIndex);
+    }
+  });
+
+  nextBtn.addEventListener("click", () => {
+    // validate current
+    if (!answers[currentIndex]) {
+      alert("Please select an answer for this question first.");
+      return;
+    }
+    if (currentIndex < totalQuestions - 1) {
+      currentIndex++;
+      renderQuestion(currentIndex);
+    } else {
+      // all done?
+      const answeredCount = Object.keys(answers).length;
+      if (answeredCount < totalQuestions) {
+        alert("Please answer all questions to see your results.");
+        return;
+      }
+      renderResults();
+      resultPanel.scrollIntoView({ behavior: "smooth" });
+    }
+  });
+
+  // Initial render
+  renderQuestion(currentIndex);
+
+  /*******************************
+   * SHARE CARD (PNG GENERATOR) *
+   *******************************/
+  let loadedPhoto = null;
+  const photoInput = document.getElementById("photoInput");
+  const makeCardBtn = document.getElementById("makeCard");
+  const downloadBtn = document.getElementById("downloadCard");
+  const cardPreview = document.getElementById("cardPreview");
+  const cardImg = document.getElementById("cardImg");
+
+  photoInput.addEventListener("change", (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const img = new Image();
+    img.onload = () => { loadedPhoto = img; };
+    img.src = URL.createObjectURL(file);
+  });
+
+  function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    const words = text.split(" ");
+    let line = "";
+    const lines = [];
+    for (let n = 0; n < words.length; n++) {
+      const test = line + words[n] + " ";
+      const w = ctx.measureText(test).width;
+      if (w > maxWidth && n > 0) {
+        lines.push(line);
+        line = words[n] + " ";
+      } else {
+        line = test;
+      }
+    }
+    lines.push(line);
+    lines.forEach((ln, i) => ctx.fillText(ln.trim(), x, y + i * lineHeight));
+    return y + (lines.length - 1) * lineHeight;
+  }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    const rx = r;
+    const ry = r;
+    ctx.beginPath();
+    ctx.moveTo(x + rx, y);
+    ctx.lineTo(x + w - rx, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + ry);
+    ctx.lineTo(x + w, y + h - ry);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - rx, y + h);
+    ctx.lineTo(x + rx, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - ry);
+    ctx.lineTo(x, y + ry);
+    ctx.quadraticCurveTo(x, y, x + rx, y);
+    ctx.closePath();
+  }
+
+  function drawShareCard(data, photo) {
+    const { pct, topKey } = data;
+    const gem = APP_CONFIG.gems[topKey];
+
+    const W = 1080;
+    const H = 1350; // IG portrait
+    const pad = 60;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext("2d");
+
+    // Background
+    const grad = ctx.createLinearGradient(0, 0, W, H);
+    grad.addColorStop(0, "#050505");
+    grad.addColorStop(1, "#141414");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    const CX = pad;
+    const CY = pad;
+    const CW = W - 2 * pad;
+    const CH = H - 2 * pad;
+
+    // Main inner card
+    ctx.fillStyle = "rgba(0,0,0,0.7)";
+    ctx.strokeStyle = "rgba(255,255,255,0.22)";
+    ctx.lineWidth = 2;
+    roundRect(ctx, CX, CY, CW, CH, 34);
+    ctx.fill();
+    ctx.stroke();
+
+    // Brand text
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "900 52px " + APP_CONFIG.brand.fontFamily;
+    ctx.fillText("1000 FAMILIES RICH", CX + 40, CY + 80);
+
+    // Top GEM
+    ctx.font = "700 34px " + APP_CONFIG.brand.fontFamily;
+    ctx.fillStyle = APP_CONFIG.brand.primarySoft;
+    ctx.fillText(("TOP GEM: " + gem.label).toUpperCase(), CX + 40, CY + 130);
+
+    // Photo circle on right
+    const P = 220;
+    const pX = CX + CW - P - 40;
+    const pY = CY + 40;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(pX + P / 2, pY + P / 2, P / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+    ctx.fillStyle = "#222";
+    ctx.fillRect(pX, pY, P, P);
+    if (photo) {
+      const ar = photo.width / photo.height;
+      let sx = 0, sy = 0, sw = photo.width, sh = photo.height;
+      if (ar > 1) {
+        sw = photo.height;
+        sx = (photo.width - sw) / 2;
+      } else {
+        sh = photo.width;
+        sy = (photo.height - sh) / 2;
+      }
+      ctx.drawImage(photo, sx, sy, sw, sh, pX, pY, P, P);
+    }
+    ctx.restore();
+    ctx.strokeStyle = "rgba(255,255,255,0.35)";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(pX + P / 2, pY + P / 2, P / 2, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // GEMS Mix section
+    let y = CY + 210;
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "800 32px " + APP_CONFIG.brand.fontFamily;
+    ctx.fillText("YOUR GEMS MIX", CX + 40, y);
+    y += 20;
+
+    const labels = ["sapphire", "ruby", "pearl", "emerald"];
+    const barW = CW - 160 - P;
+    const barH = 24;
+    const startX = CX + 40;
+    const barX = startX + 160;
+
+    labels.forEach((key) => {
+      const lab = APP_CONFIG.gems[key].label;
+      const value = data.pct[key] || 0;
+      y += 48;
+
+      ctx.font = "600 24px " + APP_CONFIG.brand.fontFamily;
+      ctx.fillStyle = "#e0e0e0";
+      ctx.fillText(lab, startX, y);
+
+      // Shell
+      ctx.fillStyle = "rgba(255,255,255,0.08)";
+      roundRect(ctx, barX, y - 22, barW, barH, 12);
+      ctx.fill();
+
+      // Fill
+      const w = Math.max(6, Math.round((barW * value) / 100));
+      const barGrad = ctx.createLinearGradient(barX, y - 22, barX + w, y - 22);
+      barGrad.addColorStop(0, "#d4af37");
+      barGrad.addColorStop(1, "#f3d26b");
+      ctx.fillStyle = barGrad;
+      roundRect(ctx, barX, y - 22, w, barH, 12);
+      ctx.fill();
+
+      // Percent text
+      ctx.font = "700 22px " + APP_CONFIG.brand.fontFamily;
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText(value + "%", barX + barW + 16, y - 2);
+    });
+
+    // How to win line
+    y += 60;
+    ctx.font = "800 30px " + APP_CONFIG.brand.fontFamily;
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("HOW TO WIN AS A " + gem.label.toUpperCase(), CX + 40, y);
+
+    y += 12;
+    ctx.font = "400 22px " + APP_CONFIG.brand.fontFamily;
+    ctx.fillStyle = "#dcdcdc";
+    const exampleTip = gem.howToWin[0] || "";
+    wrapText(ctx, exampleTip, CX + 40, y + 20, CW - 80, 30);
+
+    // Name + handle near bottom
+    const nameVal = (document.getElementById("displayName").value || "").trim();
+    const tagVal = (document.getElementById("brandTag").value || "").trim();
+
+    const bottomY = H - 110;
+    if (nameVal) {
+      ctx.font = "800 30px " + APP_CONFIG.brand.fontFamily;
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText(nameVal, CX + 40, bottomY);
+    }
+    if (tagVal) {
+      ctx.font = "600 24px " + APP_CONFIG.brand.fontFamily;
+      ctx.fillStyle = "#d0d0d0";
+      ctx.fillText(tagVal, CX + 40, bottomY + 30);
+    }
+
+    // Bottom strip
+    const lineY = H - 60;
+    ctx.strokeStyle = "#d4af37";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(CX + 40, lineY);
+    ctx.lineTo(CX + CW - 40, lineY);
+    ctx.stroke();
+
+    ctx.font = "800 22px " + APP_CONFIG.brand.fontFamily;
+    ctx.fillStyle = "#d4af37";
+    ctx.fillText("1000 FAMILIES RICH • GEMS PERSONALITY", CX + 48, lineY - 12);
+
+    return canvas;
+  }
+
+  makeCardBtn.addEventListener("click", () => {
+    const { pct, topKey } = computeResults();
+    const data = { pct, topKey };
+
+    const canvas = drawShareCard(data, loadedPhoto);
+    const url = canvas.toDataURL("image/png");
+
+    cardImg.src = url;
+    cardPreview.style.display = "block";
+    downloadBtn.style.display = "inline-block";
+
+    downloadBtn.onclick = () => {
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "1000families-gems-card.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+  });
+</script>
+</body>
+</html>
